@@ -48,7 +48,11 @@ pub fn setup(
         anim_timer: AnimationTimer(Timer::from_seconds(0.1, TimerMode::Repeating)),
         velocity: Velocity::default(),
         face: MostRecentFace { is_front: true },
-        rb: Collider::new(Vec3A::default(), Vec3A::new(32., 36., 0.))
+        collider: Collider::new(Vec3A::default(), Vec3A::new(32., 36., 0.)),
+        rigidbody: Rigidbody {
+            mass: 5.,
+            ..default()
+        },
     });
 }
 
@@ -65,5 +69,6 @@ pub fn setup_enemy(
             ..default()
         },
         Collider::new(Vec3A::default(), Vec3A::new(32., 32., 0.)),
+        Rigidbody::default(),
     ));
 }

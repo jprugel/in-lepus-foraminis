@@ -26,17 +26,20 @@ fn main() {
         .add_systems(FixedUpdate, handle_velocity)
         .add_systems(FixedUpdate, update_collider_center)
         .add_systems(FixedUpdate, detect_collisions)
-        .add_systems(Update, debug_collisions)
+        .add_systems(FixedUpdate, simulate_rigidbodies)
+        .add_systems(FixedUpdate, collision_response)
         .add_systems(Update, draw_collider_gizmos)
+        //.add_systems(Update, debug_collisions)
         .add_event::<OnCollisionEvent>()
         .register_type::<Speed>()
         .register_type::<MoveDir>()
         .register_type::<Collider>()
+        .register_type::<Rigidbody>()
         .run();
 }
 
-fn move_player(mut query: Query<(&mut Velocity, &MoveDir, &Speed)>) {
-    if let Ok((mut velocity, move_dir, speed)) = query.get_single_mut() {
-        **velocity = move_dir.get() * speed.current as f32
+fn move_player(mut query: Query<(&mut Rigidbody, &MoveDir, &Speed)>) {
+    if let Ok((mut rigidbody, move_dir, speed)) = query.get_single_mut() {
+        rigidbody.add_force(ForceType::Impulse, move_dir.get() * speed.current);
     }
 }

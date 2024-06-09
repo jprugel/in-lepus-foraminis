@@ -16,7 +16,8 @@ pub struct PlayerBundle {
     pub anim_timer: AnimationTimer,
     pub velocity: Velocity,
     pub face: MostRecentFace,
-    pub rb: Collider,
+    pub collider: Collider,
+    pub rigidbody: Rigidbody,
 }
 
 #[derive(Component)]
@@ -91,50 +92,50 @@ pub fn animation_handler(
     }
 }
 
-pub fn animation_state_handler(mut query: Query<(&Velocity, &mut AnimationState, &mut Transform, &mut MostRecentFace)>) {
-    if let Ok((velocity, mut anim_state, mut transform, mut face)) = query.get_single_mut() {
-        match velocity.length() {
+pub fn animation_state_handler(mut query: Query<(&Rigidbody, &mut AnimationState, &mut Transform, &mut MostRecentFace)>) {
+    if let Ok((rigidbody, mut anim_state, mut transform, mut face)) = query.get_single_mut() {
+        match rigidbody.velocity.length() {
             0. => *anim_state = match face.is_front {
                 true => AnimationState::Idle(IdleVariant::Front),
                 false => AnimationState::Idle(IdleVariant::Back),
             },
             _  => {
-                if velocity.x == 0. && velocity.y > 0. {
+                if rigidbody.velocity.x == 0. && rigidbody.velocity.y > 0. {
                     face.is_front = false;
                     transform.scale.x = 3.;
                     *anim_state = AnimationState::Running(Direction::North);
                 }
-                if velocity.x > 0. && velocity.y > 0. {
+                if rigidbody.velocity.x > 0. && rigidbody.velocity.y > 0. {
                     face.is_front = false;
                     transform.scale.x = 3.;
                     *anim_state = AnimationState::Running(Direction::NorthEast);
                 }
-                if velocity.x > 0. && velocity.y == 0. {
+                if rigidbody.velocity.x > 0. && rigidbody.velocity.y == 0. {
                     face.is_front = true;
                     transform.scale.x = 3.;
                     *anim_state = AnimationState::Running(Direction::East);
                 }
-                if velocity.x > 0. && velocity.y < 0. {
+                if rigidbody.velocity.x > 0. && rigidbody.velocity.y < 0. {
                     face.is_front = true;
                     transform.scale.x = 3.;
                     *anim_state = AnimationState::Running(Direction::SouthEast);
                 }
-                if velocity.x == 0. && velocity.y < 0. {
+                if rigidbody.velocity.x == 0. && rigidbody.velocity.y < 0. {
                     face.is_front = true;
                     transform.scale.x = 3.;
                     *anim_state = AnimationState::Running(Direction::South);
                 }
-                if velocity.x < 0. && velocity.y < 0. {
+                if rigidbody.velocity.x < 0. && rigidbody.velocity.y < 0. {
                     face.is_front = true;
                     transform.scale.x = -3.;
                     *anim_state = AnimationState::Running(Direction::SouthWest);
                 }
-                if velocity.x < 0. && velocity.y == 0. {
+                if rigidbody.velocity.x < 0. && rigidbody.velocity.y == 0. {
                     face.is_front = true;
                     transform.scale.x = -3.;
                     *anim_state = AnimationState::Running(Direction::West);
                 }
-                if velocity.x < 0. && velocity.y > 0. {
+                if rigidbody.velocity.x < 0. && rigidbody.velocity.y > 0. {
                     face.is_front = false;
                     transform.scale.x = -3.;
                     *anim_state = AnimationState::Running(Direction::NorthWest);
