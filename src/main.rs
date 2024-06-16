@@ -1,16 +1,11 @@
 use bevy::prelude::*;
 
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use concursus::*;
+use physica::*;
+use physica::systems::*;
 
-use in_lepus_foraminis::{
-    input::*, 
-    player::*, 
-    setup, 
-    setup_enemy, 
-    speed::*, 
-    velocity::*,
-    physics::*,
-};
+use in_lepus_foraminis::{input::*, player::*, setup, setup_enemy, speed::*};
 
 fn main() {
     App::new()
@@ -23,13 +18,12 @@ fn main() {
         .add_systems(Update, move_player)
         .add_systems(Update, animation_handler)
         .add_systems(Update, animation_state_handler)
-        .add_systems(FixedUpdate, handle_velocity)
         .add_systems(FixedUpdate, update_collider_center)
         .add_systems(FixedUpdate, detect_collisions)
         .add_systems(FixedUpdate, simulate_rigidbodies)
         .add_systems(FixedUpdate, collision_response)
         .add_systems(Update, draw_collider_gizmos)
-        //.add_systems(Update, debug_collisions)
+        .add_systems(Update, debug_collisions)
         .add_event::<OnCollisionEvent>()
         .register_type::<Speed>()
         .register_type::<MoveDir>()

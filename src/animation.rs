@@ -12,9 +12,9 @@ pub struct AnimationIndices {
 
 impl AnimationIndices {
     pub fn new(range: (usize, usize)) -> Self {
-        Self { 
-            first: range.0, 
-            last: range.1, 
+        Self {
+            first: range.0,
+            last: range.1,
         }
     }
 }

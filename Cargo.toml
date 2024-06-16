@@ -6,3 +6,5 @@ edition = "2021"
 [dependencies]
 bevy = "0.13.2"
 bevy-inspector-egui = "0.24.0"
+concursus = { path = "../concursus" }
+physica = { path = "../physica" }
